@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pong Game - Relly Gud College</title>
+    <title>Single Player Pong - Relly Gud College</title>
     <style>
         body {
             display: flex;
@@ -31,8 +31,7 @@
     <div>
         <canvas id="pongCanvas" width="800" height="400"></canvas>
         <div class="controls">
-            <p>Player 1: W (up) / S (down)</p>
-            <p>Player 2: Arrow Up / Arrow Down</p>
+            <p>Player: W (up) / S (down)</p>
             <p>Press Space to start/pause</p>
         </div>
     </div>
@@ -85,10 +84,10 @@
         }
 
         function drawScore() {
-            ctx.font = '32px Arial';
+            ctx.font = '24px Arial';
             ctx.fillStyle = '#fff';
-            ctx.fillText(score1, canvas.width / 4, 50);
-            ctx.fillText(score2, 3 * canvas.width / 4, 50);
+            ctx.fillText('Player: ' + score1, 50, 50);
+            ctx.fillText('AI: ' + score2, canvas.width - 150, 50);
         }
 
         function draw() {
@@ -138,7 +137,14 @@
 
             // Move paddles
             paddle1.y += paddle1.dy;
-            paddle2.y += paddle2.dy;
+
+            // AI for paddle2
+            let paddle2Center = paddle2.y + paddle2.height / 2;
+            if (paddle2Center < ball.y - 10) {
+                paddle2.y += 4;
+            } else if (paddle2Center > ball.y + 10) {
+                paddle2.y -= 4;
+            }
 
             // Keep paddles in bounds
             if (paddle1.y < 0) paddle1.y = 0;
@@ -172,12 +178,6 @@
                 case 'S':
                     paddle1.dy = 5;
                     break;
-                case 'ArrowUp':
-                    paddle2.dy = -5;
-                    break;
-                case 'ArrowDown':
-                    paddle2.dy = 5;
-                    break;
                 case ' ':
                     gameRunning = !gameRunning;
                     e.preventDefault();
@@ -192,10 +192,6 @@
                 case 's':
                 case 'S':
                     paddle1.dy = 0;
-                    break;
-                case 'ArrowUp':
-                case 'ArrowDown':
-                    paddle2.dy = 0;
                     break;
             }
         });
